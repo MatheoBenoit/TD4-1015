@@ -12,24 +12,13 @@ using gsl::span;
 using namespace std;
 
 struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
-/*
+
 class Item {
 public:
-	Item() = default;
-
-protected:
-	string getTitre() const { return titre_; }
-	int getAnneeSortie() const { return anneeSortie_; }
-
-private:
-	string titre_ = "";
-	int anneeSortie_ = 0;
-};*/
-
-struct Item {
 	string titre = "";
 	int anneeSortie = 0;
 };
+
 /*
 class Affichable {
 

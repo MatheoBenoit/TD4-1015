@@ -228,33 +228,22 @@ int main()
 	cout << listeFilms;
 
 	listeFilms.trouverActeur("Benedict Cumberbatch")->anneeNaissance = 1976;
-
-	vector <Item> bibliotheque;
-
-	for (Film* elements : listeFilms.enSpan()) {
-		bibliotheque.push_back(*elements);
-	}
-
 	
-	string donnee;
-	ifstream fichier;
-	fichier.open("livres.txt", ios::in);
-	int i = 0;
-	vector <Livre> livres;
+	vector <unique_ptr<Item>> bibliotheque;
+	
+	for (Film* elements : listeFilms.enSpan()) {
+		bibliotheque.push_back(make_unique<Film>(*elements));
+	}
+	
+	ifstream fichier("livres.txt");
 	while (!ws(fichier).eof()) {
-		if (i == 5) break;
+		
 		Livre livre;
-		livres.push_back(livre);
-		fichier >> quoted(donnee) >> livres[i].titre;
-		fichier >> quoted(donnee) >> livres[i].anneeSortie;
-		fichier >> quoted(donnee) >> livres[i].auteur;
-		fichier >> quoted(donnee) >> livres[i].copieVendu;
-		fichier >> quoted(donnee) >> livres[i].nPages;
-		bibliotheque.push_back(livres[i]);
-		i++;
+		fichier >> quoted(livre.titre) >> livre.anneeSortie >> quoted(livre.auteur) >> livre.copieVendu >> livre.nPages;
+		bibliotheque.push_back(make_unique<Livre>(livre));
 	}
 	fichier.close();
-
+	
 	// Pour une couverture avec 0% de lignes non exécutées:
 	listeFilms.enleverFilm(nullptr); // Enlever un film qui n'est pas dans la liste (clairement que nullptr n'y est pas).
 
