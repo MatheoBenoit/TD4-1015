@@ -21,7 +21,7 @@
     <ClCompile Include="bibliotheque_cours.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="td3.cpp">
+    <ClCompile Include="td3_solutionnaire_5.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="verification_allocation.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="structures_td3.hpp">
+    <ClInclude Include="structures_solutionnaire_td3_5.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
