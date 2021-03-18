@@ -4,6 +4,7 @@
 // Structures mémoires pour une collection de films.
 
 #include <string>
+#include <iostream>
 #include <memory>
 #include <functional>
 #include <cassert>
@@ -15,8 +16,14 @@ struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront d
 
 class Item {
 public:
+	Item() = default;
 	string titre = "";
 	int anneeSortie = 0;
+	virtual ~Item() = default;
+	virtual void afficher(ostream& os) const {
+		os << "Titre: " << titre << endl;
+		os << "Annee de sortie: " << anneeSortie << endl;
+	}
 };
 
 /*
@@ -85,22 +92,72 @@ private:
 };
 using ListeActeurs = Liste<Acteur>;
 
-struct Film : public Item
+struct Acteur
 {
+	string nom; int anneeNaissance = 0; char sexe = '\0';
+};
+
+ostream& operator<< (ostream& os, const Acteur& acteur)
+{
+	return os << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
+}
+
+struct Film : virtual public Item
+{
+	//Film() = default;
 	string realisateur; // nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	int recette=0; // recette globale du film en millions de dollars
 	ListeActeurs acteurs;
+	void afficher(ostream& os) const override {
+		Item::afficher(os);
+		os << "Réalisateur: " << realisateur << endl;
+		os << "Recette: " << recette << "M$" << endl;
+		os << "Acteurs:" << endl;
+		for (const shared_ptr<Acteur>& acteur : acteurs.enSpan())
+			os << *acteur;
+	}
 };
 
-struct Acteur
-{
-	string nom; int anneeNaissance=0; char sexe='\0';
-};
 
-struct Livre : public Item
+struct Livre : virtual public Item
 {
+	//Livre() = default;
 	string auteur = "";
-	int copieVendu = 0;
+	int copiesVendues = 0;
 	int nPages = 0;
+	void afficher(ostream& os) const override {
+		Item::afficher(os);
+		os << "Auteur: " << auteur << endl;
+		os << "Copies vendues: " << copiesVendues << "M" << endl;
+		os << "Nombre de pages: " << nPages <<endl;
+	
+	}
+};
 
+ostream& operator<< (ostream& os, const Item& item)
+{
+	item.afficher(os);
+	return os;
+}
+
+class FilmLivre : public Film, public Livre {
+public:	
+	FilmLivre(Film film, Livre livre) { //a revoir 
+		titre = film.titre;
+		anneeSortie = film.anneeSortie;
+		realisateur = film.realisateur;
+		recette = film.recette;
+		//acteurs = film.acteurs;
+		auteur = livre.auteur;
+		copiesVendues = livre.copiesVendues;
+		nPages = livre.nPages;
+	}
+	string titre;
+	int anneeSortie;
+	void afficher(ostream& os) const override {
+		Film::afficher(os);
+		os << "Auteur: " << auteur << endl;
+		os << "Copies vendues: " << copiesVendues << "M" << endl;
+		os << "Nombre de pages: " << nPages << endl;
+	}
 };

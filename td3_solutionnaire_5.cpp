@@ -175,14 +175,10 @@ void ListeFilms::detruire(bool possedeLesFilms)
 }
 //]
 
-// Pour que l'affichage de Film fonctionne avec <<, il faut aussi modifier l'affichage de l'acteur pour avoir un ostream; l'énoncé ne demande pas que ce soit un opérateur, mais tant qu'à y être...
-ostream& operator<< (ostream& os, const Acteur& acteur)
-{
-	return os << "  " << acteur.nom << ", " << acteur.anneeNaissance << " " << acteur.sexe << endl;
-}
 
 // Fonction pour afficher un film avec tous ces acteurs (en utilisant la fonction afficherActeur ci-dessus).
 //[
+/*
 ostream& operator<< (ostream& os, const Film& film)
 {
 	os << "Titre: " << film.titre << endl;
@@ -193,19 +189,20 @@ ostream& operator<< (ostream& os, const Film& film)
 	for (const shared_ptr<Acteur>& acteur : film.acteurs.enSpan())
 		os << *acteur;
 	return os;
+}*/
+
+void afficherBibliotheque(vector<unique_ptr<Item>>& bibliotheque) {
+	for (auto&& element : bibliotheque) {
+		cout << *element;
+		cout << endl;
+	}
 }
 
-
-// Pas demandé dans l'énoncé de tout mettre les affichages avec surcharge, mais pourquoi pas.
-ostream& operator<< (ostream& os, const ListeFilms& listeFilms)
-{
-	static const string ligneDeSeparation = //[
-		"\033[32m────────────────────────────────────────\033[0m\n";
-	os << ligneDeSeparation;
-	for (const Film* film : listeFilms.enSpan()) {
-		os << *film << ligneDeSeparation;
-	}
-	return os;
+Item* trouver(const vector<unique_ptr<Item>>& bibliotheque, const function<bool(const Item&)>& critere) {
+	for (auto&& element : bibliotheque)
+		if (critere(*element.get()))
+			return element.get();
+	return nullptr;
 }
 
 int main()
@@ -218,20 +215,12 @@ int main()
 	static const string ligneDeSeparation = "\n\033[35m════════════════════════════════════════\033[0m\n";
 
 	ListeFilms listeFilms = creerListe("films.bin");
-	
-	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
-	// Le premier film de la liste.  Devrait être Alien.
-	cout << *listeFilms[0];
-
-	cout << ligneDeSeparation << "Les films sont:" << endl;
-	// Affiche la liste des films.  Il devrait y en avoir 7.
-	cout << listeFilms;
 
 	listeFilms.trouverActeur("Benedict Cumberbatch")->anneeNaissance = 1976;
 	
 	vector <unique_ptr<Item>> bibliotheque;
 	
-	for (Film* elements : listeFilms.enSpan()) {
+	for (Film *elements : listeFilms.enSpan()) {
 		bibliotheque.push_back(make_unique<Film>(*elements));
 	}
 	
@@ -239,14 +228,24 @@ int main()
 	while (!ws(fichier).eof()) {
 		
 		Livre livre;
-		fichier >> quoted(livre.titre) >> livre.anneeSortie >> quoted(livre.auteur) >> livre.copieVendu >> livre.nPages;
+		fichier >> quoted(livre.titre) >> livre.anneeSortie >> quoted(livre.auteur) >> livre.copiesVendues >> livre.nPages;
 		bibliotheque.push_back(make_unique<Livre>(livre));
 	}
 	fichier.close();
 	
+	Film* hobbitFilm = dynamic_cast<Film*>(trouver(bibliotheque, [](const auto& f) { return f.titre == "Le Hobbit : La Bataille des Cinq Armées"; }));
+	Livre* hobbitLivre = dynamic_cast<Livre*>(trouver(bibliotheque, [](const auto& f) { return f.titre == "The Hobbit"; }));
+
+	FilmLivre hobbit(*hobbitFilm, *hobbitLivre);
+
+	bibliotheque.push_back(make_unique<FilmLivre>(hobbit));
+
+	afficherBibliotheque(bibliotheque);
+
 	// Pour une couverture avec 0% de lignes non exécutées:
 	listeFilms.enleverFilm(nullptr); // Enlever un film qui n'est pas dans la liste (clairement que nullptr n'y est pas).
 
 	// Détruire tout avant de terminer le programme.
 	listeFilms.detruire(true);
+
 }
