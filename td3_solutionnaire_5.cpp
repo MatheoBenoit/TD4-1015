@@ -236,7 +236,7 @@ int main()
 	Film* hobbitFilm = dynamic_cast<Film*>(trouver(bibliotheque, [](const auto& f) { return f.titre == "Le Hobbit : La Bataille des Cinq Armées"; }));
 	Livre* hobbitLivre = dynamic_cast<Livre*>(trouver(bibliotheque, [](const auto& f) { return f.titre == "The Hobbit"; }));
 
-	FilmLivre hobbit(*hobbitFilm, *hobbitLivre);
+	FilmLivre hobbit(hobbitFilm, hobbitLivre);
 
 	bibliotheque.push_back(make_unique<FilmLivre>(hobbit));
 

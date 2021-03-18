@@ -95,6 +95,7 @@ using ListeActeurs = Liste<Acteur>;
 struct Acteur
 {
 	string nom; int anneeNaissance = 0; char sexe = '\0';
+
 };
 
 ostream& operator<< (ostream& os, const Acteur& acteur)
@@ -104,7 +105,6 @@ ostream& operator<< (ostream& os, const Acteur& acteur)
 
 struct Film : virtual public Item
 {
-	//Film() = default;
 	string realisateur; // nom du réalisateur (on suppose qu'il n'y a qu'un réalisateur).
 	int recette=0; // recette globale du film en millions de dollars
 	ListeActeurs acteurs;
@@ -121,7 +121,6 @@ struct Film : virtual public Item
 
 struct Livre : virtual public Item
 {
-	//Livre() = default;
 	string auteur = "";
 	int copiesVendues = 0;
 	int nPages = 0;
@@ -142,20 +141,26 @@ ostream& operator<< (ostream& os, const Item& item)
 
 class FilmLivre : public Film, public Livre {
 public:	
-	FilmLivre(Film film, Livre livre) { //a revoir 
-		titre = film.titre;
-		anneeSortie = film.anneeSortie;
-		realisateur = film.realisateur;
-		recette = film.recette;
+	FilmLivre(Film* film, Livre* livre) : acteurs(film->acteurs) { 
+		titre = film->titre;
+		anneeSortie = film->anneeSortie;
+		realisateur = film->realisateur;
+		recette = film->recette;
 		//acteurs = film.acteurs;
-		auteur = livre.auteur;
-		copiesVendues = livre.copiesVendues;
-		nPages = livre.nPages;
+		auteur = livre->auteur;
+		copiesVendues = livre->copiesVendues;
+		nPages = livre->nPages;
 	}
-	string titre;
-	int anneeSortie;
+	ListeActeurs acteurs;
+	
 	void afficher(ostream& os) const override {
-		Film::afficher(os);
+		Item::afficher(os);
+		//Film::afficher(os);
+		os << "Réalisateur: " << realisateur << endl;
+		os << "Recette: " << recette << "M$" << endl;
+		os << "Acteurs:" << endl;
+		for (const shared_ptr<Acteur>& acteur : acteurs.enSpan())
+			os << *acteur;
 		os << "Auteur: " << auteur << endl;
 		os << "Copies vendues: " << copiesVendues << "M" << endl;
 		os << "Nombre de pages: " << nPages << endl;
