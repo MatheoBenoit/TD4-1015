@@ -5,7 +5,7 @@
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
 
-#include "structures_solutionnaire_td3_5.hpp"      // Structures de données pour la collection de films en mémoire.
+#include "structures_td4.hpp"      // Structures de données pour la collection de films en mémoire.
 
 #include "bibliotheque_cours.hpp"
 #include "verification_allocation.hpp" // Nos fonctions pour le rapport de fuites de mémoire.
