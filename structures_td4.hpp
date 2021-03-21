@@ -14,14 +14,19 @@ using namespace std;
 
 struct Film; struct Acteur; // Permet d'utiliser les types alors qu'ils seront défini après.
 
-class Item 
+class Affichable
+{
+	virtual void afficher(ostream& os) const = 0;
+};
+
+class Item : public Affichable
 {
 public:
 	Item() = default;
 	string titre = "";
 	int anneeSortie = 0;
 	virtual ~Item() = default;
-	virtual void afficher(ostream& os) const 
+	void afficher(ostream& os) const override 
 	{
 		os << "Titre: " << titre << endl;
 		os << "Annee de sortie: " << anneeSortie << endl;
@@ -140,29 +145,13 @@ ostream& operator<< (ostream& os, const Item& item)
 class FilmLivre : public Film, public Livre 
 {
 public:	
-	FilmLivre(Film* film, Livre* livre) : acteurs(film->acteurs) 
-	{ 
-		titre = film->titre;
-		anneeSortie = film->anneeSortie;
-		realisateur = film->realisateur;
-		recette = film->recette;
-		auteur = livre->auteur;
-		copiesVendues = livre->copiesVendues;
-		nPages = livre->nPages;
-	}
-	ListeActeurs acteurs;
+	FilmLivre(Film* film, Livre* livre) : Item(*film), Film(*film), Livre(*livre) {}
 	
 	void afficher(ostream& os) const override
 	{
+		//on affiche avec les fonctions des autres classes comme specifie sur discord (meme sil y a de la repetition)
 		Item::afficher(os);
-		//on ne reutilise pas les fonctions afficher de livre et film pour ne pas avoir en triple le tritre et lannee de sortie
-		os << "Réalisateur: " << realisateur << endl;
-		os << "Recette: " << recette << "M$" << endl;
-		os << "Acteurs:" << endl;
-		for (const shared_ptr<Acteur>& acteur : acteurs.enSpan())
-			os << *acteur;
-		os << "Auteur: " << auteur << endl;
-		os << "Copies vendues: " << copiesVendues << "M" << endl;
-		os << "Nombre de pages: " << nPages << endl;
+		Film::afficher(os);
+		Livre::afficher(os);
 	}
 };
