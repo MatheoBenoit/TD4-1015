@@ -375,7 +375,7 @@ int main(int argc, char* argv[])
 	cout << "Forward_list inverse" << endl;
 	forward_list<unique_ptr<Item>> forwardListInverse;
 	for (auto&& item : items) {
-		forwardListInverse.insert_after(forwardListInverse.before_begin(), make_unique<Item>(*item.get()));
+		forwardListInverse.insert_after(forwardListInverse.before_begin(), make_unique<Item>(*item.get())); //on insère toujours avant le premier élément, la liste est donc inversée
 	}
 	afficherListeItems(forwardListInverse);
 
