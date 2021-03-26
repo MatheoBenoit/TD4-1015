@@ -13,6 +13,9 @@
 #include <limits>
 #include <algorithm>
 #include <sstream>
+
+#include <forward_list>
+
 #include "cppitertools/range.hpp"
 #include "cppitertools/enumerate.hpp"
 #include "gsl/span"
@@ -272,14 +275,26 @@ Livre::Livre(istream& is) {
 	lireDe(is);
 }
 
-void afficherListeItems(span<unique_ptr<Item>> listeItems)
+//void afficherListeItems(span<unique_ptr<Item>> listeItems)
+//{
+//	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
+//	cout << ligneDeSeparation;
+//	for (auto&& item : listeItems) {
+//		cout << *item << ligneDeSeparation;
+//	}
+//}
+
+template <typename T>
+requires ranges::input_range<T>
+void afficherListeItems(const T& listeItems)
 {
 	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
 	cout << ligneDeSeparation;
 	for (auto&& item : listeItems) {
-		cout << *item << ligneDeSeparation;
+		cout << item->titre << endl;
 	}
 }
+
 
 #pragma region "Exemples de tests unitaires"//{
 #ifdef TEST
@@ -347,4 +362,29 @@ int main(int argc, char* argv[])
 	items.push_back(make_unique<FilmLivre>(dynamic_cast<Film&>(*items[4]), dynamic_cast<Livre&>(*items[9])));  // On ne demandait pas de faire une recherche; serait direct avec la matière du TD5.
 
 	afficherListeItems(items);
+
+	cout << "Forward_list normale" << endl;
+	forward_list<unique_ptr<Item>> forwardList;
+	auto pos = forwardList.before_begin();
+	for (auto&& item : items) {
+		forwardList.insert_after(pos, make_unique<Item>(*item.get()));
+		pos++;
+	}
+	afficherListeItems(forwardList);
+
+	cout << "Forward_list inverse" << endl;
+	forward_list<unique_ptr<Item>> forwardListInverse;
+	for (auto&& item : items) {
+		forwardListInverse.insert_after(forwardListInverse.before_begin(), make_unique<Item>(*item.get()));
+	}
+	afficherListeItems(forwardListInverse);
+
+	cout << "Forward_list copiée" << endl; //Revoir si O(n2)??
+	forward_list<unique_ptr<Item>> forwardListCopie;
+	auto position = forwardListCopie.before_begin();
+	for (auto&& item : forwardList) {
+		forwardListCopie.insert_after(position, make_unique<Item>(*item.get()));
+		position++;
+	}
+	afficherListeItems(forwardListCopie);
 }
