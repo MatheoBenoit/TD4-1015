@@ -363,7 +363,7 @@ int main(int argc, char* argv[])
 
 	afficherListeItems(items);
 
-	cout << "Forward_list normale" << endl;
+	cout << ligneDeSeparation << "Forward_list normale" << endl;
 	forward_list<unique_ptr<Item>> forwardList;
 	auto pos = forwardList.before_begin();
 	for (auto&& item : items) {
@@ -372,14 +372,14 @@ int main(int argc, char* argv[])
 	}
 	afficherListeItems(forwardList);
 
-	cout << "Forward_list inverse" << endl;
+	cout << ligneDeSeparation << "Forward_list inverse" << endl;
 	forward_list<unique_ptr<Item>> forwardListInverse;
 	for (auto&& item : items) {
 		forwardListInverse.insert_after(forwardListInverse.before_begin(), make_unique<Item>(*item.get())); //on insère toujours avant le premier élément, la liste est donc inversée
 	}
 	afficherListeItems(forwardListInverse);
 
-	cout << "Forward_list copiée" << endl; //Revoir si O(n2)??
+	cout << ligneDeSeparation << "Forward_list copiée" << endl; //Revoir si O(n2)??
 	forward_list<unique_ptr<Item>> forwardListCopie;
 	auto position = forwardListCopie.before_begin();
 	for (auto&& item : forwardList) {
