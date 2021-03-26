@@ -9,7 +9,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B7001A71-959C-438D-952B-3D359136CB8A}</ProjectGuid>
     <RootNamespace>Projet1</RootNamespace>
-    <ProjectName>td3</ProjectName>
+    <ProjectName>td5</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -45,13 +45,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bibliotheque_cours.cpp" />
-    <ClCompile Include="td3_solutionnaire_5.cpp" />
+    <ClCompile Include="td5.cpp" />
     <ClCompile Include="verification_allocation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bibliotheque_cours.hpp" />
     <ClInclude Include="debogage_memoire.hpp" />
-    <ClInclude Include="structures_solutionnaire_td3_5.hpp" />
+    <ClInclude Include="structures_td5.hpp" />
     <ClInclude Include="verification_allocation.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
