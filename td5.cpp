@@ -387,4 +387,17 @@ int main(int argc, char* argv[])
 		position++;
 	}
 	afficherListeItems(forwardListCopie);
+
+	cout << ligneDeSeparation << "Vecteur inverse" << endl;//ctu bon
+	vector<unique_ptr<Item>> vecteurInverse;
+	vecteurInverse.reserve(items.size());
+	for (auto&& item : forwardList) {
+		vecteurInverse.insert(vecteurInverse.begin(), make_unique<Item>(*item.get()));
+	}
+	afficherListeItems(vecteurInverse);
+
+	Film alien = dynamic_cast<Film&>(*items[0]);
+	for (auto&& acteur : alien.acteurs) {
+		cout << acteur;
+	}
 }
