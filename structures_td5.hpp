@@ -37,6 +37,43 @@ private:
 	Film** elements = nullptr; // Pointeur vers un tableau de Film*, chaque Film* pointant vers un Film.
 };
 
+struct Acteur
+{
+	string nom; int anneeNaissance = 0; char sexe = '\0';
+};
+
+
+class Node {
+public:
+	Node(const Acteur& acteur) :acteur_(acteur) {}
+//private:
+	Node* next_ = past_end;
+	Node* previous_ = past_end;
+	Acteur acteur_;
+	inline static constexpr Node* past_end = nullptr;
+	/*friend class Liste<T>;
+	friend class Iterator;*/
+};
+
+class Iterator {
+public:
+	Iterator(Node* position = Node::past_end) :position_(position) {}
+	Acteur& operator* () {
+		Expects(position_ != Node::past_end);
+		return position_->acteur_;
+	}
+	Iterator& operator++ () {
+		Expects(position_ != Node::past_end);
+		position_ = position_->next_;
+		return *this;
+	}
+	bool operator== (const Iterator& b) const = default;
+	bool operator!= (const Iterator& b) const = default;
+
+	Node* position_;
+	//friend class Liste<Acteur>;
+};
+
 template <typename T>
 class Liste {
 public:
@@ -66,9 +103,19 @@ public:
 	shared_ptr<T>& operator[] (int index) { return elements[index]; }
 	span<shared_ptr<T>> enSpan() const { return span(elements.get(), nElements); }
 
+	Iterator begin() {
+		return Iterator(first_);
+	}
+
+	Iterator end() {
+		return Iterator(last_);
+	}
+
 private:
 	int capacite = 0, nElements = 0;
 	unique_ptr<shared_ptr<T>[]> elements;
+	Node* first_ = Node::past_end;
+	Node* last_ = Node::past_end;
 };
 
 using ListeActeurs = Liste<Acteur>;
@@ -117,9 +164,4 @@ public:
 	FilmLivre(const Film& film, const Livre& livre) : Item(film), Film(film), Livre(livre) { }
 
 	void afficherSur(ostream& os) const override;
-};
-
-struct Acteur
-{
-	string nom; int anneeNaissance=0; char sexe='\0';
 };

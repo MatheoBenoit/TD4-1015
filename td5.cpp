@@ -396,8 +396,10 @@ int main(int argc, char* argv[])
 	}
 	afficherListeItems(vecteurInverse);
 
-	Film alien = dynamic_cast<Film&>(*items[0]);
-	for (auto&& acteur : alien.acteurs) {
+	//Film alien = dynamic_cast<Film&>(*items[0]);
+	cout << "JJJ";
+	for (Acteur& acteur : dynamic_cast<Film&>(*items[0]).acteurs) {
+		cout << "MMM";
 		cout << acteur;
 	}
 }
