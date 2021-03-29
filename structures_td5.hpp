@@ -45,10 +45,13 @@ struct Acteur
 
 class Node {
 public:
-	Node(const Acteur& acteur) :acteur_(acteur) {}
+	Node(const Acteur& acteur)
+	{
+		acteur_ = acteur;
+	}
 //private:
 	Node* next_ = past_end;
-	Node* previous_ = past_end;
+	//Node* previous_ = past_end;
 	Acteur acteur_;
 	inline static constexpr Node* past_end = nullptr;
 	/*friend class Liste<T>;
@@ -57,7 +60,10 @@ public:
 
 class Iterator {
 public:
-	Iterator(Node* position = Node::past_end) :position_(position) {}
+	Iterator(Node* position = Node::past_end) 
+	{
+		position_ = position;
+	}
 	Acteur& operator* () {
 		Expects(position_ != Node::past_end);
 		return position_->acteur_;
@@ -108,7 +114,7 @@ public:
 	}
 
 	Iterator end() {
-		return Iterator(last_);
+		return Iterator(Node::past_end);
 	}
 
 private:

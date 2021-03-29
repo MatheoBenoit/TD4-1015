@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <sstream>
 
+#include <functional>
+#include <map>
+#include <numeric>
 #include <forward_list>
 
 #include "cppitertools/range.hpp"
@@ -396,10 +399,27 @@ int main(int argc, char* argv[])
 	}
 	afficherListeItems(vecteurInverse);
 
-	//Film alien = dynamic_cast<Film&>(*items[0]);
-	cout << "JJJ";
-	for (Acteur& acteur : dynamic_cast<Film&>(*items[0]).acteurs) {
+	Film alien = dynamic_cast<Film&>(*items[0]);
+	/*for (Acteur& acteur : dynamic_cast<Film&>(*items[0]).acteurs) {
 		cout << "MMM";
 		cout << acteur;
+	}*/
+
+	map<string, Item> conteneurTrie;
+	map<string, Item>::iterator it;
+	for (auto&& item : items) {
+		conteneurTrie[item.get()->titre] = *item.get();
 	}
+	
+	for (pair<string, Item> element : conteneurTrie) {
+		cout << element.first << endl;
+	}
+
+	cout << conteneurTrie.find("The Hobbit")->second;
+	
+	vector<Film> vecteurFilm;
+	copy_if(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm),
+		[](unique_ptr<Item> ptr) { return dynamic_cast<Film*>(ptr.get()); });
+
+	int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 1, [](Film a, Film b) {return a.recette + b.recette; });
 }
