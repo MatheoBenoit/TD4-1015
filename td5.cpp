@@ -430,9 +430,10 @@ int main(int argc, char* argv[])
 	cout << conteneurTrie["The Hobbit"];
 	
 	//3.1
-	//vector<Film*> vecteurFilm;
-	//copy(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm));
-	//	//[](Item* ptr) { return dynamic_cast<Film*>(ptr); });
+	cout << ligneDeSeparation << "Vecteur de films:" << endl;
+	vector<Item*> vecteurFilm;
+	copy_if(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm),[](Item* ptr) { return dynamic_cast<Film*>(ptr); });
+	afficherListeItems(vecteurFilm);
 
 	//3.4
 	//dynamic_cast<Film*>(ptr);
