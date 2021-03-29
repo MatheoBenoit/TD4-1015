@@ -435,7 +435,6 @@ int main(int argc, char* argv[])
 	copy_if(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm),[](Item* ptr) { return dynamic_cast<Film*>(ptr); });
 	afficherListeItems(vecteurFilm);
 
-	//3.4
-	//dynamic_cast<Film*>(ptr);
-	//int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 1, [](Film a, Film b) {return a.recette + b.recette; });
+	//3.2
+	int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 0, [&](int valeur, int valeur1) {return dynamic_cast<Film*>(vecteurFilm[0])->recette + dynamic_cast<Film*>(vecteurFilm[0])->recette; });
 }
