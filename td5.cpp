@@ -1,5 +1,10 @@
-﻿// Solutionnaire du TD4 INF1015 hiver 2021
-// Par Francois-R.Boyer@PolyMtl.ca
+﻿/*
+* Programme qui manipule des conteneurs, des itérateurs et des algorithmes.
+* file   td5.cpp
+* author Benoit - Paraschivoiu et St - Arnaud
+* date    29 mars 2021
+* Créé le 25 mars 2021
+*/
 
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
@@ -278,15 +283,7 @@ Livre::Livre(istream& is) {
 	lireDe(is);
 }
 
-//void afficherListeItems(span<unique_ptr<Item>> listeItems)
-//{
-//	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
-//	cout << ligneDeSeparation;
-//	for (auto&& item : listeItems) {
-//		cout << *item << ligneDeSeparation;
-//	}
-//}
-
+//Question 0
 template <typename T>
 requires ranges::input_range<T>
 void afficherListeItems(const T& listeItems)
@@ -295,6 +292,13 @@ void afficherListeItems(const T& listeItems)
 	cout << ligneDeSeparation;
 	for (auto&& item : listeItems) {
 		cout << item->titre << endl;
+	}
+}
+
+//Fonction utile pour la question 2.1
+void afficherMap(map<string, Item> conteneurTrie) {
+	for (pair<string, Item> element : conteneurTrie) {
+		cout << element.first << endl;
 	}
 }
 
@@ -366,60 +370,71 @@ int main(int argc, char* argv[])
 
 	afficherListeItems(items);
 
-	cout << ligneDeSeparation << "Forward_list normale" << endl;
-	forward_list<unique_ptr<Item>> forwardList;
+	//1.1
+	cout << ligneDeSeparation << "Forward_list normale:" << endl;
+	forward_list<Item*> forwardList;
+	int tailleForwardList = 0;
 	auto pos = forwardList.before_begin();
 	for (auto&& item : items) {
-		forwardList.insert_after(pos, make_unique<Item>(*item.get()));
+		forwardList.insert_after(pos, item.get());
 		pos++;
+		tailleForwardList++;
 	}
 	afficherListeItems(forwardList);
 
-	cout << ligneDeSeparation << "Forward_list inverse" << endl;
-	forward_list<unique_ptr<Item>> forwardListInverse;
+	//1.2
+	cout << ligneDeSeparation << "Forward_list inverse:" << endl;
+	forward_list<Item*> forwardListInverse;
 	for (auto&& item : items) {
-		forwardListInverse.insert_after(forwardListInverse.before_begin(), make_unique<Item>(*item.get())); //on insère toujours avant le premier élément, la liste est donc inversée
+		forwardListInverse.insert_after(forwardListInverse.before_begin(), item.get()); //on insère toujours un element avant le debut de la forward_list, l'ordre est donc inversé
 	}
 	afficherListeItems(forwardListInverse);
 
-	cout << ligneDeSeparation << "Forward_list copiée" << endl; //Revoir si O(n2)??
-	forward_list<unique_ptr<Item>> forwardListCopie;
+	//1.3
+	cout << ligneDeSeparation << "Forward_list copiée" << endl;
+	forward_list<Item*> forwardListCopie;
 	auto position = forwardListCopie.before_begin();
 	for (auto&& item : forwardList) {
-		forwardListCopie.insert_after(position, make_unique<Item>(*item.get()));
+		forwardListCopie.insert_after(position, item);
 		position++;
 	}
 	afficherListeItems(forwardListCopie);
 
-	cout << ligneDeSeparation << "Vecteur inverse" << endl;//ctu bon
-	vector<unique_ptr<Item>> vecteurInverse;
-	vecteurInverse.reserve(items.size());
-	for (auto&& item : forwardList) {
-		vecteurInverse.insert(vecteurInverse.begin(), make_unique<Item>(*item.get()));
+	//1.4
+	cout << ligneDeSeparation << "Vecteur inverse:" << endl;
+	vector<Item*> vecteurInverse(tailleForwardList);
+	for (auto&& item : forwardList)
+	{
+		tailleForwardList--;
+		vecteurInverse[tailleForwardList] = item;
 	}
 	afficherListeItems(vecteurInverse);
 
+	//1.5
+	cout << ligneDeSeparation << "Les acteurs du film Alien:" << endl;
 	Film alien = dynamic_cast<Film&>(*items[0]);
-	/*for (Acteur& acteur : dynamic_cast<Film&>(*items[0]).acteurs) {
-		cout << "MMM";
-		cout << acteur;
-	}*/
+	for (auto&& acteur : alien.acteurs) {
+		cout << *acteur;
+	}
 
+	//2.1
+	cout << ligneDeSeparation << "Les items en ordre alphabétique:" << endl;
 	map<string, Item> conteneurTrie;
-	map<string, Item>::iterator it;
 	for (auto&& item : items) {
 		conteneurTrie[item.get()->titre] = *item.get();
 	}
-	
-	for (pair<string, Item> element : conteneurTrie) {
-		cout << element.first << endl;
-	}
+	afficherMap(conteneurTrie);
 
-	cout << conteneurTrie.find("The Hobbit")->second;
+	//2.2
+	cout << ligneDeSeparation << "Trouvons l'item selon le titre «The Hobbit»:" << endl;
+	cout << conteneurTrie["The Hobbit"];
 	
-	vector<Film> vecteurFilm;
-	copy_if(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm),
-		[](unique_ptr<Item> ptr) { return dynamic_cast<Film*>(ptr.get()); });
+	//3.1
+	//vector<Film*> vecteurFilm;
+	//copy(forwardList.begin(), forwardList.end(), back_inserter(vecteurFilm));
+	//	//[](Item* ptr) { return dynamic_cast<Film*>(ptr); });
 
-	int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 1, [](Film a, Film b) {return a.recette + b.recette; });
+	//3.4
+	//dynamic_cast<Film*>(ptr);
+	//int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 1, [](Film a, Film b) {return a.recette + b.recette; });
 }

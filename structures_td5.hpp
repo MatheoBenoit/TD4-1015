@@ -1,5 +1,11 @@
 ﻿#pragma once
-// Structures mémoires pour une collection de films.
+/*
+* Fichier de structures et classes pour le fichier td5.cpp.
+* file   structures_td5.cpp
+* author Benoit - Paraschivoiu et St - Arnaud
+* date    29 mars 2021
+* Créé le 25 mars 2021
+*/
 
 #include <string>
 #include <iostream>
@@ -37,49 +43,6 @@ private:
 	Film** elements = nullptr; // Pointeur vers un tableau de Film*, chaque Film* pointant vers un Film.
 };
 
-struct Acteur
-{
-	string nom; int anneeNaissance = 0; char sexe = '\0';
-};
-
-
-class Node {
-public:
-	Node(const Acteur& acteur)
-	{
-		acteur_ = acteur;
-	}
-//private:
-	Node* next_ = past_end;
-	//Node* previous_ = past_end;
-	Acteur acteur_;
-	inline static constexpr Node* past_end = nullptr;
-	/*friend class Liste<T>;
-	friend class Iterator;*/
-};
-
-class Iterator {
-public:
-	Iterator(Node* position = Node::past_end) 
-	{
-		position_ = position;
-	}
-	Acteur& operator* () {
-		Expects(position_ != Node::past_end);
-		return position_->acteur_;
-	}
-	Iterator& operator++ () {
-		Expects(position_ != Node::past_end);
-		position_ = position_->next_;
-		return *this;
-	}
-	bool operator== (const Iterator& b) const = default;
-	bool operator!= (const Iterator& b) const = default;
-
-	Node* position_;
-	//friend class Liste<Acteur>;
-};
-
 template <typename T>
 class Liste {
 public:
@@ -107,21 +70,20 @@ public:
 	}
 
 	shared_ptr<T>& operator[] (int index) { return elements[index]; }
+
 	span<shared_ptr<T>> enSpan() const { return span(elements.get(), nElements); }
 
-	Iterator begin() {
-		return Iterator(first_);
+	shared_ptr<T>* begin() {
+		return &elements[0];
 	}
 
-	Iterator end() {
-		return Iterator(Node::past_end);
+	shared_ptr<T>* end() {
+		return &elements[capacite];
 	}
 
 private:
 	int capacite = 0, nElements = 0;
 	unique_ptr<shared_ptr<T>[]> elements;
-	Node* first_ = Node::past_end;
-	Node* last_ = Node::past_end;
 };
 
 using ListeActeurs = Liste<Acteur>;
@@ -136,9 +98,13 @@ class Item : public Affichable {
 public:
 	void afficherSur(ostream& os) const override;
 	void lireDe(istream& is);
-
 	string titre;
 	int anneeSortie = 0;
+};
+
+struct Acteur
+{
+	string nom; int anneeNaissance = 0; char sexe = '\0';
 };
 
 class Film : virtual public Item
