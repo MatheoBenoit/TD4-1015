@@ -73,13 +73,9 @@ public:
 
 	span<shared_ptr<T>> enSpan() const { return span(elements.get(), nElements); }
 
-	shared_ptr<T>* begin() {
-		return &elements[0];
-	}
+	shared_ptr<T>* begin() { return &elements[0]; }
 
-	shared_ptr<T>* end() {
-		return &elements[capacite];
-	}
+	shared_ptr<T>* end() { return &elements[capacite]; }
 
 private:
 	int capacite = 0, nElements = 0;
@@ -88,13 +84,15 @@ private:
 
 using ListeActeurs = Liste<Acteur>;
 
-class Affichable {
+class Affichable 
+{
 public:
 	virtual void afficherSur(ostream& os) const = 0;
 	virtual ~Affichable() = default;
 };
 
-class Item : public Affichable {
+class Item : public Affichable 
+{
 public:
 	void afficherSur(ostream& os) const override;
 	void lireDe(istream& is);
@@ -131,7 +129,8 @@ public:
 	int copiesVendues=0, nPages=0;
 };
 
-class FilmLivre : public Film, public Livre {
+class FilmLivre : public Film, public Livre 
+{
 public:
 	FilmLivre(const Film& film, const Livre& livre) : Item(film), Film(film), Livre(livre) { }
 

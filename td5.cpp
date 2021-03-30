@@ -305,8 +305,9 @@ void afficherListeItemsComplete(vector<unique_ptr<Item>>& listeItems)
 	}
 }
 
-//Fonction utile pour la question 2.1
-void afficherMap(map<string, Item> conteneurTrie) {
+//Fonction d'affichage pour la question 2.1
+void afficherMap(map<string, Item> conteneurTrie) 
+{
 	for (pair<string, Item> element : conteneurTrie) {
 		cout << element.first << endl;
 	}
@@ -413,8 +414,7 @@ int main(int argc, char* argv[])
 	//1.4
 	cout << ligneDeSeparation << "Vecteur inverse:" << endl;
 	vector<Item*> vecteurInverse(tailleForwardList);
-	for (auto&& item : forwardList)
-	{
+	for (auto&& item : forwardList){
 		tailleForwardList--;
 		vecteurInverse[tailleForwardList] = item;
 	}
@@ -447,5 +447,5 @@ int main(int argc, char* argv[])
 
 	//3.2
 	auto somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 0, [&](int somme, Item* film) {return somme + dynamic_cast<Film*>(film)->recette; });
-	cout << ligneDeSeparation << "La somme des recettes: " << somme << "M$";
+	cout << ligneDeSeparation << "La somme des recettes des films: " << somme << "M$";
 }
