@@ -295,6 +295,16 @@ void afficherListeItems(const T& listeItems)
 	}
 }
 
+void afficherListeItemsComplete(vector<unique_ptr<Item>>& listeItems)
+{
+	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
+	cout << ligneDeSeparation;
+	for (auto&& item : listeItems) {
+		cout << *item << endl;
+		cout << ligneDeSeparation;
+	}
+}
+
 //Fonction utile pour la question 2.1
 void afficherMap(map<string, Item> conteneurTrie) {
 	for (pair<string, Item> element : conteneurTrie) {
@@ -368,7 +378,7 @@ int main(int argc, char* argv[])
 	
 	items.push_back(make_unique<FilmLivre>(dynamic_cast<Film&>(*items[4]), dynamic_cast<Livre&>(*items[9])));  // On ne demandait pas de faire une recherche; serait direct avec la matière du TD5.
 
-	afficherListeItems(items);
+	afficherListeItemsComplete(items);
 
 	//1.1
 	cout << ligneDeSeparation << "Forward_list normale:" << endl;
@@ -436,5 +446,6 @@ int main(int argc, char* argv[])
 	afficherListeItems(vecteurFilm);
 
 	//3.2
-	int somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 0, [&](int valeur, int valeur1) {return dynamic_cast<Film*>(vecteurFilm[0])->recette + dynamic_cast<Film*>(vecteurFilm[0])->recette; });
+	auto somme = reduce(vecteurFilm.begin(), vecteurFilm.end(), 0, [&](int somme, Item* film) {return somme + dynamic_cast<Film*>(film)->recette; });
+	cout << ligneDeSeparation << "La somme des recettes: " << somme << "M$";
 }
